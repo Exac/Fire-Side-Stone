@@ -23,6 +23,7 @@ public class game extends Applet implements KeyListener
 		g.drawImage(background,0-i,0,this);
 		g.drawImage(background,697-i,0,this);
 		g.drawImage(snoopy,300,180,this);
+		i+=2;
 		if(i>697)
 			i-=697;
 		if(i<0)
@@ -34,10 +35,10 @@ public class game extends Applet implements KeyListener
 			case KeyEvent.VK_DOWN:
 				break;
 			case KeyEvent.VK_RIGHT:
-				i++;
+				i+=5;
 				break;
 			case KeyEvent.VK_LEFT:
-				i--;
+				i-=5;
 				break;
 			case KeyEvent.VK_UP:
 				break;
