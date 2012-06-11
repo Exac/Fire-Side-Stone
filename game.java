@@ -22,7 +22,6 @@ public class game extends Applet implements MouseListener
 	}
 	public void paint(Graphics g)
 	{
-		g.drawString("Epicest Game Ever",20,20);
 		g.drawImage(background,0-i,0,this);
 		g.drawImage(background,697-i,0,this);
 		g.drawImage(snoopy,300,180,this);
