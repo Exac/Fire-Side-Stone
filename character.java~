@@ -1,12 +1,5 @@
 class character
 {
 	int health = 100;
-<<<<<<< HEAD
 	String filename;
-	
 }
-=======
-	hello world!!!!!
-	another changes
-}
->>>>>>> 154ac4c38705982969e9b4db99e2845e3aa6ab93
