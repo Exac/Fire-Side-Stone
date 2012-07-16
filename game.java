@@ -13,7 +13,7 @@ public class game extends Applet implements KeyListener
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
 	{
-		soundFile1 = getAudioClip(getDocumentBase(),"music/02.wav");
+		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
 		snoopy = getImage(getDocumentBase(),"img/snoopy.gif");
 		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
