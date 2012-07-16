@@ -19,8 +19,8 @@ public class game extends Applet implements KeyListener
 		addKeyListener(this);
 		soundFile1.play();
 
-		objects.add(new oBase("img/snoopy.gif",380,100,this));
-		objects_index++;
+		//objects.add(new oBase("img/snoopy.gif",380,100,this));
+		//objects_index++;
 	}
 
 	public void paint(Graphics g)
@@ -28,13 +28,13 @@ public class game extends Applet implements KeyListener
 		g.drawImage(background,0-i,j,this);
 		g.drawImage(background,700-i,j,this);
 
-		//g.drawImage(snoopy,300,180,this);
-
+		g.drawImage(snoopy,300,180,this);
+		/*
 		for(int x = 0; x<objects_index;x++)
 		{
 			objects.get(x).drawInRelation(g, objects.get(0).posx, objects.get(0).posy, 300,180);
 		}
-
+		*/
 		i+=2; // Gives continuous scrolling while keys aren't doing shit
 
 		//Restarts the background
