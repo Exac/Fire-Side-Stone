@@ -12,10 +12,9 @@ public class game extends Applet implements KeyListener
 	Image background;
 	public void init()
 	{
-		soundFile1 = getAudioClip(getDocumentBase(),"BEAST_FICTION.wav");
-		soundFile2 = getAudioClip(getDocumentBase(),"shootS.au");
-		snoopy = getImage(getDocumentBase(),"snoopy.gif");
-		background = getImage(getDocumentBase(),"testback.jpg");
+		soundFile1 = getAudioClip(getDocumentBase(),"music/02.wav");
+		snoopy = getImage(getDocumentBase(),"img/snoopy.gif");
+		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
 		soundFile1.play();
 	}
