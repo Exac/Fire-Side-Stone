@@ -1,15 +1,19 @@
+import java.applet.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.util.ArrayList;
 class oBase
 {
 	Image img;
 	String imageName;
 	int posx,posy;
 	int vspeed=0, hspeed=0;
-	void oBase(String a, int x, int y)
+	public oBase(String a, int x, int y, game z)
 	{
 		posx=x;
 		posy=y;
 		imageName = a;
-		img = getImage(getDocumentBase(),a);
+		img = z.getImage(z.getDocumentBase(),a);
 	}
 	void setvspeed(int x)
 	{
@@ -25,16 +29,11 @@ class oBase
 	}
 	void setposy(int x)
 	{
-		posy = y;
+		posy = x;
 	}
-	void draw.inRelation(Graphics g, int relx, int rely, int drawx, int drawy)
+	void drawInRelation(Graphics g, int relx, int rely, int drawx, int drawy)
 	{
-		g.drawImage(img,drawx,drawy);
+		g.drawImage(img,drawx-(relx-posx),drawy-(rely-posy),null);
 	}
-}
-class oChar extends oBase
-{
-	int health = 100;
-	String filename;
 }
 

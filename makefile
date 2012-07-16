@@ -1,5 +1,5 @@
 all:
-	javac game.java
+	javac game.java objects.java
 clean:
 	rm *~
 	rm *.class

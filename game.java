@@ -1,15 +1,16 @@
 import java.applet.*;
 import java.awt.event.*;
 import java.awt.*;
-
+import java.util.ArrayList;
 public class game extends Applet implements KeyListener
 {
 	int i = 0;
 	int j = 0;
+	int objects_index=0;
  	AudioClip soundFile1;
-	AudioClip soundFile2;
 	Image snoopy;
 	Image background;
+	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
 	{
 		soundFile1 = getAudioClip(getDocumentBase(),"music/02.wav");
@@ -17,6 +18,9 @@ public class game extends Applet implements KeyListener
 		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
 		soundFile1.play();
+
+		objects.add(new oBase("img/snoopy.gif",380,100,this));
+		objects_index++;
 	}
 
 	public void paint(Graphics g)
@@ -24,7 +28,12 @@ public class game extends Applet implements KeyListener
 		g.drawImage(background,0-i,j,this);
 		g.drawImage(background,700-i,j,this);
 
-		g.drawImage(snoopy,300,180,this);
+		//g.drawImage(snoopy,300,180,this);
+
+		for(int x = 0; x<objects_index;x++)
+		{
+			objects.get(x).drawInRelation(g, objects.get(0).posx, objects.get(0).posy, 300,180);
+		}
 
 		i+=2; // Gives continuous scrolling while keys aren't doing shit
 
