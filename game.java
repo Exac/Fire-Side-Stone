@@ -14,28 +14,30 @@ public class game extends Applet implements KeyListener
 	public void init()
 	{
 		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
-		snoopy = getImage(getDocumentBase(),"img/snoopy.gif");
 		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
 		soundFile1.play();
 
-		//objects.add(new oBase("img/snoopy.gif",380,100,this));
+		objects.add(new oBase("img/snoopy.gif",380,100,this));
+		objects.get(0).hspeed = 5;
+		objects_index++;
+		//objects.add(new oBack("backgrounds/01.jpg",0,0,this));
 		//objects_index++;
 	}
 
 	public void paint(Graphics g)
 	{
+		//g.drawImage(background,(0-objects.get(0).posx)%700,j,this);
+		//g.drawImage(background,(700-objects.get(0).posx)%700,j,this);
 		g.drawImage(background,0-i,j,this);
 		g.drawImage(background,700-i,j,this);
-
-		g.drawImage(snoopy,300,180,this);
-		/*
-		for(int x = 0; x<objects_index;x++)
+		for(int x = 1; x<objects_index;x++)
 		{
-			objects.get(x).drawInRelation(g, objects.get(0).posx, objects.get(0).posy, 300,180);
+			g.drawImage(objects.get(x).img,objects.get(x).posx,objects.get(x).posy,this);
+			objects.get(x).posx+=objects.get(x).hspeed;
+			objects.get(x).posy+=objects.get(x).vspeed;
 		}
-		*/
-		i+=2; // Gives continuous scrolling while keys aren't doing shit
+		i+=2;
 
 		//Restarts the background
 		if(i>700)
@@ -48,8 +50,7 @@ public class game extends Applet implements KeyListener
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
-			//	if (j != -70) {
-					j-=5;// }
+					j-=5;
 				break;
 			case KeyEvent.VK_RIGHT:
 				i+=3;
@@ -58,8 +59,7 @@ public class game extends Applet implements KeyListener
 				i-=3;
 				break;
 			case KeyEvent.VK_UP:
-				if (j < 0) { //Limitations so the view does not fuck over
-					j+=5;	}
+					j+=5;
 				break;
 		}
 	}
@@ -68,8 +68,22 @@ public class game extends Applet implements KeyListener
 		paint(g);
 	}
 	public void keyTyped(KeyEvent ke) {}
-	public void keyReleased(KeyEvent ke) {}
-
-
+	public void keyReleased(KeyEvent ke) {
+		switch(ke.getKeyCode())
+		{
+			case KeyEvent.VK_DOWN:
+					j-=5;
+				break;
+			case KeyEvent.VK_RIGHT:
+				i+=3;
+				break;
+			case KeyEvent.VK_LEFT:
+				i-=3;
+				break;
+			case KeyEvent.VK_UP:
+					j+=5;
+				break;
+		}
+	}
 }
 

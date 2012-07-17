@@ -2,7 +2,7 @@ import java.applet.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
-class oBase
+public class oBase
 {
 	Image img;
 	String imageName;
@@ -30,10 +30,6 @@ class oBase
 	void setposy(int x)
 	{
 		posy = x;
-	}
-	void drawInRelation(Graphics g, int relx, int rely, int drawx, int drawy)
-	{
-		g.drawImage(img,drawx-(relx-posx),drawy-(rely-posy),null);
 	}
 }
 

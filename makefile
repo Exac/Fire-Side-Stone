@@ -1,6 +1,5 @@
 all:
-	javac game.java objects.java
+	javac game.java oBase.java oChar.java oBack.java
 clean:
-	rm *~
 	rm *.class
-
+	rm *~
