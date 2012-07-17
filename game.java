@@ -11,7 +11,7 @@ public class game extends Applet implements KeyListener
 	int cx = 300, cy=180;
 	int camera=2;
 	int objects_index=0;
-	int buffer;
+
  	AudioClip soundFile1;
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
@@ -19,36 +19,37 @@ public class game extends Applet implements KeyListener
 		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();
-		try{
+		try {
+			int bufferType;
 			Scanner sc = new Scanner(new File("objects.dat"));
 			camera=sc.nextInt();
 			objects_index=sc.nextInt();
-			/*
 			for(int i = 0; i < objects_index; i++)
 			{
-				buffer=sc.nextInt();
-				if(buffer==0)
+				bufferType=sc.nextInt();
+				if(bufferType==0)
 				{
-					objects.add(new oBase(sc.nextLine(),sc.nextInt(),sc.nextInt(),this));
+					objects.add(new oBase(sc.next(), sc.nextInt(), sc.nextInt(),this));
+					objects.get(i).hspeed = sc.nextInt();
+					objects.get(i).vspeed = sc.nextInt();
 				}
-				else if(buffer==1)
+				else if(bufferType==1)
 				{
-					objects.add(new oChar(sc.nextLine(),sc.nextInt(),sc.nextInt(),this));
+					objects.add(new oChar(sc.next(), sc.nextInt(), sc.nextInt(),this));
+					objects.get(i).hspeed = sc.nextInt();
+					objects.get(i).vspeed = sc.nextInt();
 				}
-				else if(buffer==2)
+				else if(bufferType==2)
 				{
-					objects.add(new oBack(sc.nextLine(),sc.nextInt(),sc.nextInt(),this));
+					objects.add(new oBack(sc.next(), sc.nextInt(), sc.nextInt(),this));
 				}
 
 			}
-			*/
-
-
-	        } catch (FileNotFoundException e) {
-	            soundFile1 = getAudioClip(getDocumentBase(),"music/02.wav");
-		addKeyListener(this);
-		soundFile1.play();
-	        }
+			sc.close();
+			} catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+	       /*
 		objects.add(new oBack("backgrounds/01.jpg",0,0,this));
 		objects_index++;
 		objects.add(new oChar("img/snoopy.gif",380,100,this));
@@ -57,7 +58,7 @@ public class game extends Applet implements KeyListener
 		objects.add(new oChar("img/barrel.gif",300,100,this));
 		objects.get(2).hspeed = 5;
 		objects_index++;
-
+			*/
 	}
 
 	public void paint(Graphics g)
