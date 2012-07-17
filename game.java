@@ -49,16 +49,6 @@ public class game extends Applet implements KeyListener
 			} catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-	       /*
-		objects.add(new oBack("backgrounds/01.jpg",0,0,this));
-		objects_index++;
-		objects.add(new oChar("img/snoopy.gif",380,100,this));
-		objects.get(1).hspeed = 5;
-		objects_index++;
-		objects.add(new oChar("img/barrel.gif",300,100,this));
-		objects.get(2).hspeed = 5;
-		objects_index++;
-			*/
 	}
 
 	public void paint(Graphics g)
