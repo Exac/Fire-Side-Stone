@@ -6,17 +6,13 @@ public class game extends Applet implements KeyListener
 {
 	int screenSizeX = 700, screenSizeY=350;
 	int cx = 300, cy=180;
-	int i = 0;
 	int camera=1;
 	int objects_index=0;
  	AudioClip soundFile1;
-	Image snoopy;
-	Image background;
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
 	{
 		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
-		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
 		soundFile1.play();
 		objects.add(new oBack("backgrounds/01.jpg",0,0,this));
@@ -31,10 +27,6 @@ public class game extends Applet implements KeyListener
 
 	public void paint(Graphics g)
 	{
-		//g.drawImage(background,(0-objects.get(0).posx)%700,j,this);
-		//g.drawImage(background,(700-objects.get(0).posx)%700,j,this);
-		//g.drawImage(background,0-i,j,this);
-		//g.drawImage(background,700-i,j,this);
 		for(int x = 0; x<objects_index;x++)
 		{
 			objects.get(x).move();
@@ -50,20 +42,12 @@ public class game extends Applet implements KeyListener
 				g.drawImage(objects.get(x).img,	cx-(objects.get(camera).posx-objects.get(x).posx),	cy-(objects.get(camera).posy-objects.get(x).posy),this);
 			}
 		}
-		i+=2;
-
-		//Restarts the background
-		if(i>700)
-			i-=700;
-		if(i<0)
-			i+=700;
 	}
 
 	public void keyPressed(KeyEvent ke) {
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
-				//j-=5;
 				break;
 			case KeyEvent.VK_RIGHT:
 				objects.get(camera).hspeed=10;
@@ -72,7 +56,6 @@ public class game extends Applet implements KeyListener
 				objects.get(camera).hspeed=-6;
 				break;
 			case KeyEvent.VK_UP:
-				//j+=5;
 				break;
 		}
 	}
@@ -85,7 +68,6 @@ public class game extends Applet implements KeyListener
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
-				//	j-=5;
 				break;
 			case KeyEvent.VK_RIGHT:
 				objects.get(camera).hspeed=0;
@@ -94,7 +76,6 @@ public class game extends Applet implements KeyListener
 				objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_UP:
-				//	j+=5;
 				break;
 		}
 	}
