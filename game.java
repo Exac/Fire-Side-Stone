@@ -14,7 +14,7 @@ public class game extends Applet implements KeyListener
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
 	{
-		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
+		soundFile1 = getAudioClip(getDocumentBase(),"music/02.wav");
 		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
 		soundFile1.play();
@@ -23,7 +23,7 @@ public class game extends Applet implements KeyListener
 		objects.get(0).hspeed = 5;
 		objects_index++;
 		objects.add(new oChar("img/snoopy.gif",280,100,this));
-		objects.get(0).hspeed = 4;
+		objects.get(0).hspeed = 6;
 		objects_index++;
 
 		//objects.add(new oBack("backgrounds/01.jpg",0,0,this));
@@ -40,9 +40,10 @@ public class game extends Applet implements KeyListener
 
 		for(int x = 0; x<objects_index;x++)
 		{
-			g.drawImage(objects.get(x).img,	cx-(objects.get(0).posx-objects.get(x).posx),	cy-(objects.get(0).posy-objects.get(x).posy),this);
 			objects.get(x).posx+=objects.get(x).hspeed;
 			objects.get(x).posy+=objects.get(x).vspeed;
+			g.drawImage(objects.get(x).img,	cx-(objects.get(0).posx-objects.get(x).posx),	cy-(objects.get(0).posy-objects.get(x).posy),this);
+
 		}
 		i+=2;
 
