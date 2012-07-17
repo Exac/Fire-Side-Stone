@@ -31,7 +31,9 @@ public class game extends Applet implements KeyListener
 		//g.drawImage(background,(700-objects.get(0).posx)%700,j,this);
 		g.drawImage(background,0-i,j,this);
 		g.drawImage(background,700-i,j,this);
-		for(int x = 1; x<objects_index;x++)
+		//g.drawImage(snoopy,300,180,this);
+
+		for(int x = 0; x<objects_index;x++)
 		{
 			g.drawImage(objects.get(x).img,objects.get(x).posx,objects.get(x).posy,this);
 			objects.get(x).posx+=objects.get(x).hspeed;
