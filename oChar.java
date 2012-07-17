@@ -5,4 +5,8 @@ public class oChar extends oBase
 	{
 		super(a,x,y,z);
 	}
+	int getType()
+	{
+		return 1;
+	}
 }

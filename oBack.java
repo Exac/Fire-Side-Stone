@@ -5,4 +5,8 @@ public class oBack extends oBase
 	{
 		super(a,x,y,z);
 	}
+	int getType()
+	{
+		return 2;
+	}
 }

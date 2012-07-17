@@ -20,5 +20,9 @@ public class oBase
 		posx+=hspeed;
 		posy+=vspeed;
 	}
+	int getType()
+	{
+		return 0;
+	}
 }
 
