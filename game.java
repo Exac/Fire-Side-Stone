@@ -6,7 +6,7 @@ public class game extends Applet implements KeyListener
 {
 	int cx = 300, cy=180;
 	int i = 0;
-	int j = 0;
+	int camera=0;
 	int objects_index=0;
  	AudioClip soundFile1;
 	Image snoopy;
@@ -14,7 +14,7 @@ public class game extends Applet implements KeyListener
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
 	{
-		soundFile1 = getAudioClip(getDocumentBase(),"music/02.wav");
+		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
 		background = getImage(getDocumentBase(),"backgrounds/01.jpg");
 		addKeyListener(this);
 		soundFile1.play();
@@ -22,8 +22,8 @@ public class game extends Applet implements KeyListener
 		objects.add(new oChar("img/snoopy.gif",380,100,this));
 		objects.get(0).hspeed = 5;
 		objects_index++;
-		objects.add(new oChar("img/snoopy.gif",280,100,this));
-		objects.get(0).hspeed = 6;
+		objects.add(new oChar("img/snoopy.gif",300,100,this));
+		objects.get(1).hspeed = 5;
 		objects_index++;
 
 		//objects.add(new oBack("backgrounds/01.jpg",0,0,this));
@@ -36,14 +36,10 @@ public class game extends Applet implements KeyListener
 		//g.drawImage(background,(700-objects.get(0).posx)%700,j,this);
 		g.drawImage(background,0-i,j,this);
 		g.drawImage(background,700-i,j,this);
-		//g.drawImage(snoopy,300,180,this);
-
 		for(int x = 0; x<objects_index;x++)
 		{
-			objects.get(x).posx+=objects.get(x).hspeed;
-			objects.get(x).posy+=objects.get(x).vspeed;
-			g.drawImage(objects.get(x).img,	cx-(objects.get(0).posx-objects.get(x).posx),	cy-(objects.get(0).posy-objects.get(x).posy),this);
-
+			objects.get(x).move();
+			g.drawImage(objects.get(x).img,	cx-(objects.get(camera).posx-objects.get(x).posx),	cy-(objects.get(camera).posy-objects.get(x).posy),this);
 		}
 		i+=2;
 
@@ -58,16 +54,16 @@ public class game extends Applet implements KeyListener
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
-					j-=5;
+				//j-=5;
 				break;
 			case KeyEvent.VK_RIGHT:
-				i+=3;
+				objects.get(camera).hspeed=10;
 				break;
 			case KeyEvent.VK_LEFT:
-				i-=3;
+				objects.get(camera).hspeed=-6;
 				break;
 			case KeyEvent.VK_UP:
-					j+=5;
+				//j+=5;
 				break;
 		}
 	}
@@ -80,16 +76,16 @@ public class game extends Applet implements KeyListener
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
-					j-=5;
+				//	j-=5;
 				break;
 			case KeyEvent.VK_RIGHT:
-				i+=3;
+				objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_LEFT:
-				i-=3;
+				objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_UP:
-					j+=5;
+				//	j+=5;
 				break;
 		}
 	}

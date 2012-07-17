@@ -15,21 +15,10 @@ public class oBase
 		imageName = a;
 		img = z.getImage(z.getDocumentBase(),a);
 	}
-	void setvspeed(int x)
+	void move()
 	{
-		vspeed = x;
-	}
-	void sethspeed(int x)
-	{
-		hspeed = x;
-	}
-	void setposx(int x)
-	{
-		posx = x;
-	}
-	void setposy(int x)
-	{
-		posy = x;
+		posx+=hspeed;
+		posy+=vspeed;
 	}
 }
 
