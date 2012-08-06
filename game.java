@@ -19,6 +19,12 @@ public class game extends Applet implements KeyListener
 		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();
+		objects.add(new oBack("backgrounds/01.jpg",0,0,this));
+		objects.add(new oBase("img/snoopy.gif",500,500,this));
+		objects.add(new oChar("img/barrel.gif",500,500,this));
+		objects.get(2).gravity=true;
+		objects_index=3;	
+		/*
 		try {
 			int bufferType;
 			Scanner sc = new Scanner(new File("objects.dat"));
@@ -49,6 +55,8 @@ public class game extends Applet implements KeyListener
 			} catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+	*/
+	
 	}
 
 	public void paint(Graphics g)
@@ -56,7 +64,7 @@ public class game extends Applet implements KeyListener
 		for(int x = 0; x<objects_index;x++)
 		{
 			objects.get(x).move();
-			if(objects.get(x).getType()==2)
+			if(objects.get(x).getType()==2) //if background
 			{
 				g.drawImage(objects.get(x).img, 700-objects.get(camera).posx%700,  350-objects.get(camera).posy%350, this);
 				g.drawImage(objects.get(x).img, 0-objects.get(camera).posx%700,  350-objects.get(camera).posy%350, this);
@@ -82,6 +90,12 @@ public class game extends Applet implements KeyListener
 				objects.get(camera).hspeed=-6;
 				break;
 			case KeyEvent.VK_UP:
+				if(objects.get(camera).in_air==false)
+				{
+					objects.get(camera).buffy=objects.get(camera).posy;
+					objects.get(camera).vspeed=-20;
+					objects.get(camera).in_air = true;
+				}
 				break;
 		}
 	}
