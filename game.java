@@ -4,79 +4,118 @@ import java.awt.*;
 import java.util.*;
 import java.io.*;
 import java.util.Scanner;
+import java.util.ArrayList;
+class oBase
+{
+	Image img;
+	String imageName;
 
+	int posx,posy;
+	int vspeed=0, hspeed=0;
+	int buffy;
+	int width, length;
+
+
+	Boolean in_air = false;
+	Boolean gravity = false;
+	int jumpstr = 80;
+
+	Boolean tiled = false;
+	int depth = 0;
+
+	public oBase(String a, int x, int y, game z)
+	{
+		posx=x;
+		posy=y;
+		imageName = a;
+		img = z.getImage(z.getDocumentBase(),a);
+	}
+	void move()
+	{
+		posx+=hspeed;
+		posy+=vspeed;
+		if(gravity == true && posy < buffy-jumpstr && vspeed < 0)
+			vspeed *=-1;
+		if(posy>500)
+		{
+			vspeed=0;
+			in_air=false;
+		}
+	}
+}
+class oList
+{
+	ArrayList<oBase> objects = new ArrayList<oBase>();
+	int camera;
+	int maxX, maxY, cX, cY;
+	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY)
+	{
+		camera = cam;
+		maxX = screenSizeX;
+		maxY = screenSizeY;
+		cX = cameraX;
+		cY = cameraY;
+	}
+	void add(oBase x)
+	{
+		objects.add(x);
+	}
+	void add(String a, int x, int y, game z)
+	{
+		objects.add(new oBase(a,x,y,z));
+	}
+	void sortDepth()
+	{
+
+	}
+	void draw(Graphics g, game z)
+	{
+		for(int x = 0; x<objects.size();x++)
+		{
+			objects.get(x).move();
+			if(objects.get(x).tiled == true) //if background
+			{
+				g.drawImage(objects.get(x).img, 700-objects.get(camera).posx%700,  350-objects.get(camera).posy%350, z);
+				g.drawImage(objects.get(x).img, 0-objects.get(camera).posx%700,  350-objects.get(camera).posy%350, z);
+				g.drawImage(objects.get(x).img, 700-objects.get(camera).posx%700,  0-objects.get(camera).posy%350, z);
+				g.drawImage(objects.get(x).img, 0-objects.get(camera).posx%700,  0-objects.get(camera).posy%350, z);
+			}
+			else
+			{
+				g.drawImage(objects.get(x).img,	cX-(objects.get(camera).posx-objects.get(x).posx),	cY-(objects.get(camera).posy-objects.get(x).posy),z);
+			}
+		}
+	}
+}
 public class game extends Applet implements KeyListener
 {
-	int screenSizeX = 700, screenSizeY=350;
-	int cx = 300, cy=180;
-	int camera=2;
-	int objects_index=0;
-
+	oList objectlist = new oList(2,700,350,300,180);
  	AudioClip soundFile1;
-	ArrayList<oBase> objects = new ArrayList<oBase>();
 	public void init()
 	{
 		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();
-		objects.add(new oBack("backgrounds/01.jpg",0,0,this));
-		objects.add(new oBase("img/snoopy.gif",500,500,this));
-		objects.add(new oChar("img/barrel.gif",500,500,this));
-		objects.get(2).gravity=true;
-		objects_index=3;	
-		/*
-		try {
-			int bufferType;
-			Scanner sc = new Scanner(new File("objects.dat"));
-			camera=sc.nextInt();
-			objects_index=sc.nextInt();
-			for(int i = 0; i < objects_index; i++)
-			{
-				bufferType=sc.nextInt();
-				if(bufferType==0)
-				{
-					objects.add(new oBase(sc.next(), sc.nextInt(), sc.nextInt(),this));
-					objects.get(i).hspeed = sc.nextInt();
-					objects.get(i).vspeed = sc.nextInt();
-				}
-				else if(bufferType==1)
-				{
-					objects.add(new oChar(sc.next(), sc.nextInt(), sc.nextInt(),this));
-					objects.get(i).hspeed = sc.nextInt();
-					objects.get(i).vspeed = sc.nextInt();
-				}
-				else if(bufferType==2)
-				{
-					objects.add(new oBack(sc.next(), sc.nextInt(), sc.nextInt(),this));
-				}
 
-			}
-			sc.close();
-			} catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-	*/
-	
+		objectlist.add(new oBase("backgrounds/01.jpg",0,0,this));
+		objectlist.add(new oBase("img/snoopy.gif",500,500,this));
+		objectlist.add(new oBase("img/barrel.gif",500,500,this));
+
+		//objectlist.get(2).gravity=true;
 	}
-
 	public void paint(Graphics g)
 	{
-		for(int x = 0; x<objects_index;x++)
-		{
-			objects.get(x).move();
-			if(objects.get(x).getType()==2) //if background
-			{
-				g.drawImage(objects.get(x).img, 700-objects.get(camera).posx%700,  350-objects.get(camera).posy%350, this);
-				g.drawImage(objects.get(x).img, 0-objects.get(camera).posx%700,  350-objects.get(camera).posy%350, this);
-				g.drawImage(objects.get(x).img, 700-objects.get(camera).posx%700,  0-objects.get(camera).posy%350, this);	
-				g.drawImage(objects.get(x).img, 0-objects.get(camera).posx%700,  0-objects.get(camera).posy%350, this);				
-			}
-			else
-			{
-				g.drawImage(objects.get(x).img,	cx-(objects.get(camera).posx-objects.get(x).posx),	cy-(objects.get(camera).posy-objects.get(x).posy),this);
-			}
-		}
+		objectlist.sortDepth();
+		objectlist.draw(g,this);
 	}
+
+	public void update(Graphics g)
+	{
+		paint(g);
+	}
+
+
+
 
 	public void keyPressed(KeyEvent ke) {
 		switch(ke.getKeyCode())
@@ -84,24 +123,20 @@ public class game extends Applet implements KeyListener
 			case KeyEvent.VK_DOWN:
 				break;
 			case KeyEvent.VK_RIGHT:
-				objects.get(camera).hspeed=10;
+				//objects.get(camera).hspeed=10;
 				break;
 			case KeyEvent.VK_LEFT:
-				objects.get(camera).hspeed=-6;
+				//objects.get(camera).hspeed=-6;
 				break;
 			case KeyEvent.VK_UP:
-				if(objects.get(camera).in_air==false)
+				/*if(objects.get(camera).in_air==false)
 				{
 					objects.get(camera).buffy=objects.get(camera).posy;
 					objects.get(camera).vspeed=-20;
 					objects.get(camera).in_air = true;
-				}
+				}*/
 				break;
 		}
-	}
-	public void update(Graphics g)
-	{
-		paint(g);
 	}
 	public void keyTyped(KeyEvent ke) {}
 	public void keyReleased(KeyEvent ke) {
@@ -110,14 +145,13 @@ public class game extends Applet implements KeyListener
 			case KeyEvent.VK_DOWN:
 				break;
 			case KeyEvent.VK_RIGHT:
-				objects.get(camera).hspeed=0;
+				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_LEFT:
-				objects.get(camera).hspeed=0;
+				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_UP:
 				break;
 		}
 	}
 }
-
