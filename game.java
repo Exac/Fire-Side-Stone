@@ -5,6 +5,19 @@ import java.util.*;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+
+class posCalc
+{
+	int camOnAbsX, camOnAbsY, camSizeX, camSizeY;
+	int camY(int absX)
+	{
+		return 0;
+	}
+	int camX(int absY)
+	{
+		return 0;
+	}
+}
 class oBase
 {
 	Image img;
@@ -15,22 +28,27 @@ class oBase
 	int buffy;
 	int width, length;
 
-
 	Boolean in_air = false;
 	Boolean gravity = false;
 	int jumpstr = 80;
 
 	Boolean tiled = false;
 	int depth = 0;
-
-	public oBase(Image a, int x, int y,int d, game z)
+	Rectangle mask;
+	public oBase(Image a, int x, int y,int d, game z)//without mask
 	{
 		posx=x;
 		posy=y;
 		depth = d;
 		img = a;
-		maskX;
-		maskY;
+		mask = new Rectangle(0,0,0,0);
+	}
+	public oBase(Image a, int x, int y,int d, game z, int maskX, int maskY)//with mask
+	{
+		posx=x;
+		posy=y;
+		depth = d;
+		img = a;
 	}
 	void move()
 	{
@@ -162,11 +180,11 @@ public class game extends Applet implements KeyListener
  	AudioClip soundFile1;
 	public void init()
 	{
-		objectlist.addImage("backgrounds/01.jpg",this);
-		objectlist.addImage("img/snoopy.gif",this);
-		objectlist.addImage("img/barrel.gif",this);
+		objectlist.addImage("game/res/tiles/01.jpg",this);
+		objectlist.addImage("game/res/snoopy.gif",this);
+		objectlist.addImage("game/res/barrel.gif",this);
 
-		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
+		soundFile1 = getAudioClip(getDocumentBase(),"game/music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();
 
