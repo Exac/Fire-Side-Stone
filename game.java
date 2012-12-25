@@ -23,12 +23,14 @@ class oBase
 	Boolean tiled = false;
 	int depth = 0;
 
-	public oBase(String a, int x, int y, game z)
+	public oBase(Image a, int x, int y,int d, game z)
 	{
 		posx=x;
 		posy=y;
-		imageName = a;
-		img = z.getImage(z.getDocumentBase(),a);
+		depth = d;
+		img = a;
+		maskX;
+		maskY;
 	}
 	void move()
 	{
@@ -45,10 +47,20 @@ class oBase
 }
 class oList
 {
+	ArrayList<Image> images = new ArrayList<Image>();
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	int camera;
 	int maxX, maxY, cX, cY;
-	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY)
+	public oList(String imgs[], int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY, game z)
+	{
+		addImages(imgs,z);
+		camera = cam;
+		maxX = screenSizeX;
+		maxY = screenSizeY;
+		cX = cameraX;
+		cY = cameraY;
+	}
+	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY, game z)
 	{
 		camera = cam;
 		maxX = screenSizeX;
@@ -56,17 +68,48 @@ class oList
 		cX = cameraX;
 		cY = cameraY;
 	}
+	void addImages(String imgs[], game z)
+	{
+		for(int i = 0; i < imgs.length; i++)
+		{
+				addImage(imgs[i],z);
+		}
+	}
+	void addImage(String img, game z)
+	{
+		images.add(z.getImage(z.getDocumentBase(),img));
+	}
 	void add(oBase x)
 	{
 		objects.add(x);
 	}
-	void add(String a, int x, int y, game z)
+	void add(int ImageIndex, int x, int y, int depth, game z)
 	{
-		objects.add(new oBase(a,x,y,z));
+		objects.add(new oBase(images.get(ImageIndex),x,y,depth, z));
 	}
-	void sortDepth()
+	private void swap(int x, int y)
 	{
+		oBase temp = objects.get(x);
+		objects.set(x,objects.get(y));
+		objects.set(y,temp);
+	}
 
+	public void sortDepth()//simple bubble sort
+	{
+		boolean sorted;
+		int p = 1;
+		do
+		{
+			sorted = true;
+			for (int q = 0; q < objects.size()-p; q++)
+				if (objects.get(q).depth < objects.get(q+1).depth) //sort objects with least depth to last so they are drawn last
+				{
+					swap(q,q+1);
+					sorted = false;
+				}
+			p++;
+		}
+		while (!sorted);
 	}
 	void setTiled(int i)
 	{
@@ -113,17 +156,23 @@ class oList
 }
 public class game extends Applet implements KeyListener
 {
-	oList objectlist = new oList(2,700,350,300,180);
+	//String[] x = {"backgrounds/01.jpg", "img/snoopy.gif", "img/barrel.gif"};
+	oList objectlist = new oList(1,700,350,300,180,this);
+
  	AudioClip soundFile1;
 	public void init()
 	{
+		objectlist.addImage("backgrounds/01.jpg",this);
+		objectlist.addImage("img/snoopy.gif",this);
+		objectlist.addImage("img/barrel.gif",this);
+
 		soundFile1 = getAudioClip(getDocumentBase(),"music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();
 
-		objectlist.add(new oBase("backgrounds/01.jpg",0,0,this));
-		objectlist.add(new oBase("img/snoopy.gif",500,500,this));
-		objectlist.add(new oBase("img/barrel.gif",500,500,this));
+		objectlist.add(0,0,0,1,this);
+		objectlist.add(1,500,500,0,this);
+		objectlist.add(2,500,500,0,this);
 		objectlist.setTiled(0);
 		//objectlist.get(2).gravity=true;
 	}
@@ -136,7 +185,8 @@ public class game extends Applet implements KeyListener
 	{
 		paint(g);
 	}
-	public void keyPressed(KeyEvent ke) {
+	public void keyPressed(KeyEvent ke)
+	{
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
@@ -162,7 +212,8 @@ public class game extends Applet implements KeyListener
 		}
 	}
 	public void keyTyped(KeyEvent ke) {}
-	public void keyReleased(KeyEvent ke) {
+	public void keyReleased(KeyEvent ke)
+	{
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
@@ -180,5 +231,20 @@ public class game extends Applet implements KeyListener
 				objectlist.setvSpeed(objectlist.camera,0);
 				break;
 		}
+	}
+	public boolean mouseDrag(Event e, int x, int y)
+	{
+		repaint();
+		return true;
+	}
+	public boolean mouseDown(Event e, int x, int y)
+	{
+	    repaint();
+		return true;
+	}
+	public boolean mouseUp(Event e, int x, int y)
+	{
+		repaint();
+		return true;
 	}
 }
