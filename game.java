@@ -174,6 +174,7 @@ class oList
 }
 public class game extends Applet implements KeyListener
 {
+	Graphics buffer;
 	//String[] x = {"backgrounds/01.jpg", "img/snoopy.gif", "img/barrel.gif"};
 	oList objectlist = new oList(1,700,350,300,180,this);
 
@@ -189,13 +190,16 @@ public class game extends Applet implements KeyListener
 		soundFile1.play();
 
 		objectlist.add(0,0,0,1,this);
-		objectlist.add(1,500,500,0,this);
 		objectlist.add(2,500,500,0,this);
+		//objectlist.sethSpeed(1,10);
+		//objectlist.add(1,500,500,0,this);
 		objectlist.setTiled(0);
 		//objectlist.get(2).gravity=true;
 	}
 	public void paint(Graphics g)
 	{
+		if(buffer!=g)
+			buffer=g;
 		objectlist.sortDepth();
 		objectlist.draw(g,this);
 	}
@@ -209,6 +213,7 @@ public class game extends Applet implements KeyListener
 		{
 			case KeyEvent.VK_DOWN:
 				objectlist.setvSpeed(objectlist.camera,10);
+
 				break;
 			case KeyEvent.VK_RIGHT:
 				//objects.get(camera).hspeed=10;
@@ -228,6 +233,7 @@ public class game extends Applet implements KeyListener
 				}*/
 				break;
 		}
+		repaint();
 	}
 	public void keyTyped(KeyEvent ke) {}
 	public void keyReleased(KeyEvent ke)
@@ -249,6 +255,7 @@ public class game extends Applet implements KeyListener
 				objectlist.setvSpeed(objectlist.camera,0);
 				break;
 		}
+		repaint();
 	}
 	public boolean mouseDrag(Event e, int x, int y)
 	{
