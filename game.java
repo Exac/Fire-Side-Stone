@@ -5,7 +5,7 @@ import java.util.*;
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
-
+import java.net.URL;
 class posCalc
 {
 	int camOnAbsX, camOnAbsY, camSizeX, camSizeY;
@@ -65,6 +65,8 @@ class oBase
 }
 class oList
 {
+	Toolkit toolkit = Toolkit.getDefaultToolkit();
+
 	ArrayList<Image> images = new ArrayList<Image>();
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	int camera;
@@ -78,7 +80,7 @@ class oList
 		cX = cameraX;
 		cY = cameraY;
 	}
-	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY, game z)
+	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY)
 	{
 		camera = cam;
 		maxX = screenSizeX;
@@ -95,7 +97,9 @@ class oList
 	}
 	void addImage(String img, game z)
 	{
-		images.add(z.getImage(z.getDocumentBase(),img));
+		//images.add(z.getImage(z.getDocumentBase(),img));  //applet
+		images.add(toolkit.getImage(img)); //application
+
 	}
 	void add(oBase x)
 	{
@@ -172,11 +176,30 @@ class oList
 		}
 	}
 }
-public class game extends Applet implements KeyListener
+class game extends Panel implements KeyListener
 {
 	Graphics buffer;
 	//String[] x = {"backgrounds/01.jpg", "img/snoopy.gif", "img/barrel.gif"};
-	oList objectlist = new oList(1,700,350,300,180,this);
+	oList objectlist = new oList(1,700,350,300,180);
+
+	public static void main(String[] args) {
+		Frame f = new Frame();
+		f.addWindowListener(new java.awt.event.WindowAdapter()
+		{
+			public void windowClosing(java.awt.event.WindowEvent e)
+			{
+				System.exit(0);
+			};
+		});
+
+		game ut = new game();
+		ut.setSize(100,100); // same size as defined in the HTML APPLET
+		f.add(ut);
+		f.pack();
+		ut.init();
+		f.setSize(100,100 + 20); // add 20, seems enough for the Frame title,
+		f.show();
+	}
 
  	AudioClip soundFile1;
 	public void init()
@@ -184,10 +207,10 @@ public class game extends Applet implements KeyListener
 		objectlist.addImage("game/res/tiles/01.jpg",this);
 		objectlist.addImage("game/res/snoopy.gif",this);
 		objectlist.addImage("game/res/barrel.gif",this);
-
+/*
 		soundFile1 = getAudioClip(getDocumentBase(),"game/music/01.wav");
 		addKeyListener(this);
-		soundFile1.play();
+		soundFile1.play();*/
 
 		objectlist.add(0,0,0,1,this);
 		objectlist.add(2,500,500,0,this);
