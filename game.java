@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.net.URL;
+import java.util.Scanner; //imports the necessary classes
+
 class posCalc
 {
 	int camOnAbsX, camOnAbsY, camSizeX, camSizeY;
@@ -71,15 +73,6 @@ class oList
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	int camera;
 	int maxX, maxY, cX, cY;
-	public oList(String imgs[], int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY, game z)
-	{
-		addImages(imgs,z);
-		camera = cam;
-		maxX = screenSizeX;
-		maxY = screenSizeY;
-		cX = cameraX;
-		cY = cameraY;
-	}
 	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY)
 	{
 		camera = cam;
@@ -88,18 +81,9 @@ class oList
 		cX = cameraX;
 		cY = cameraY;
 	}
-	void addImages(String imgs[], game z)
+	void addImage(String img)
 	{
-		for(int i = 0; i < imgs.length; i++)
-		{
-				addImage(imgs[i],z);
-		}
-	}
-	void addImage(String img, game z)
-	{
-		//images.add(z.getImage(z.getDocumentBase(),img));  //applet
-		images.add(toolkit.getImage(img)); //application
-
+		images.add(toolkit.getImage(img));
 	}
 	void add(oBase x)
 	{
@@ -115,7 +99,6 @@ class oList
 		objects.set(x,objects.get(y));
 		objects.set(y,temp);
 	}
-
 	public void sortDepth()//simple bubble sort
 	{
 		boolean sorted;
@@ -178,11 +161,10 @@ class oList
 }
 class game extends Panel implements KeyListener
 {
-	Graphics buffer;
-	//String[] x = {"backgrounds/01.jpg", "img/snoopy.gif", "img/barrel.gif"};
 	oList objectlist = new oList(1,700,350,300,180);
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException
+	{
+		//Scanner inFile = new Scanner(new File("myFile"));
 		Frame f = new Frame();
 		f.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -193,20 +175,31 @@ class game extends Panel implements KeyListener
 		});
 
 		game ut = new game();
-		ut.setSize(100,100); // same size as defined in the HTML APPLET
+		ut.setFocusable(true);
+		ut.setSize(700,350); // same size as defined in the HTML APPLET
 		f.add(ut);
 		f.pack();
 		ut.init();
-		f.setSize(100,100 + 20); // add 20, seems enough for the Frame title,
-		f.show();
-	}
+		f.setSize(700,350+20); // add 20, seems enough for the Frame title,
+		while(true)
+		{
+			ut.repaint();
+			f.show();
+			try{
+				Thread.sleep(20);
+			}
+			catch(InterruptedException ex){}
 
+		}
+
+	}
  	AudioClip soundFile1;
 	public void init()
 	{
-		objectlist.addImage("game/res/tiles/01.jpg",this);
-		objectlist.addImage("game/res/snoopy.gif",this);
-		objectlist.addImage("game/res/barrel.gif",this);
+		addKeyListener(this);
+		objectlist.addImage("game/res/tiles/01.jpg");
+		objectlist.addImage("game/res/snoopy.gif");
+		objectlist.addImage("game/res/barrel.gif");
 /*
 		soundFile1 = getAudioClip(getDocumentBase(),"game/music/01.wav");
 		addKeyListener(this);
@@ -214,15 +207,13 @@ class game extends Panel implements KeyListener
 
 		objectlist.add(0,0,0,1,this);
 		objectlist.add(2,500,500,0,this);
-		//objectlist.sethSpeed(1,10);
+		objectlist.sethSpeed(1,10);
 		//objectlist.add(1,500,500,0,this);
 		objectlist.setTiled(0);
 		//objectlist.get(2).gravity=true;
 	}
 	public void paint(Graphics g)
 	{
-		if(buffer!=g)
-			buffer=g;
 		objectlist.sortDepth();
 		objectlist.draw(g,this);
 	}
@@ -256,7 +247,7 @@ class game extends Panel implements KeyListener
 				}*/
 				break;
 		}
-		repaint();
+
 	}
 	public void keyTyped(KeyEvent ke) {}
 	public void keyReleased(KeyEvent ke)
@@ -278,21 +269,21 @@ class game extends Panel implements KeyListener
 				objectlist.setvSpeed(objectlist.camera,0);
 				break;
 		}
-		repaint();
+
 	}
 	public boolean mouseDrag(Event e, int x, int y)
 	{
-		repaint();
+
 		return true;
 	}
 	public boolean mouseDown(Event e, int x, int y)
 	{
-	    repaint();
+
 		return true;
 	}
 	public boolean mouseUp(Event e, int x, int y)
 	{
-		repaint();
+
 		return true;
 	}
 }
