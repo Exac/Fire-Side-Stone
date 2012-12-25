@@ -68,6 +68,30 @@ class oList
 	{
 
 	}
+	void setTiled(int i)
+	{
+		objects.get(i).tiled=true;
+	}
+	void unsetTiled(int i)
+	{
+		objects.get(i).tiled=false;
+	}
+	void setGravity(int i)
+	{
+		objects.get(i).gravity=true;
+	}
+	void unsetGravity(int i)
+	{
+		objects.get(i).gravity=false;
+	}
+	void sethSpeed(int i, int x)
+	{
+		objects.get(i).hspeed=x;
+	}
+	void setvSpeed(int i, int x)
+	{
+		objects.get(i).vspeed=x;
+	}
 	void draw(Graphics g, game z)
 	{
 		for(int x = 0; x<objects.size();x++)
@@ -100,7 +124,7 @@ public class game extends Applet implements KeyListener
 		objectlist.add(new oBase("backgrounds/01.jpg",0,0,this));
 		objectlist.add(new oBase("img/snoopy.gif",500,500,this));
 		objectlist.add(new oBase("img/barrel.gif",500,500,this));
-
+		objectlist.setTiled(0);
 		//objectlist.get(2).gravity=true;
 	}
 	public void paint(Graphics g)
@@ -108,27 +132,26 @@ public class game extends Applet implements KeyListener
 		objectlist.sortDepth();
 		objectlist.draw(g,this);
 	}
-
 	public void update(Graphics g)
 	{
 		paint(g);
 	}
-
-
-
-
 	public void keyPressed(KeyEvent ke) {
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
+				objectlist.setvSpeed(objectlist.camera,10);
 				break;
 			case KeyEvent.VK_RIGHT:
 				//objects.get(camera).hspeed=10;
+				objectlist.sethSpeed(objectlist.camera,10);
 				break;
 			case KeyEvent.VK_LEFT:
+				objectlist.sethSpeed(objectlist.camera,-10);
 				//objects.get(camera).hspeed=-6;
 				break;
 			case KeyEvent.VK_UP:
+				objectlist.setvSpeed(objectlist.camera,-10);
 				/*if(objects.get(camera).in_air==false)
 				{
 					objects.get(camera).buffy=objects.get(camera).posy;
@@ -143,14 +166,18 @@ public class game extends Applet implements KeyListener
 		switch(ke.getKeyCode())
 		{
 			case KeyEvent.VK_DOWN:
+				objectlist.setvSpeed(objectlist.camera,0);
 				break;
 			case KeyEvent.VK_RIGHT:
+				objectlist.sethSpeed(objectlist.camera,0);
 				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_LEFT:
+				objectlist.sethSpeed(objectlist.camera,0);
 				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_UP:
+				objectlist.setvSpeed(objectlist.camera,0);
 				break;
 		}
 	}
