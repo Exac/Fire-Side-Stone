@@ -3,21 +3,29 @@ import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
 import java.io.*;
-import java.util.Scanner;
 import java.util.ArrayList;
-import java.net.URL;
-import java.util.Scanner; //imports the necessary classes
-
 class posCalc
 {
-	int camOnAbsX, camOnAbsY, camSizeX, camSizeY;
-	int camY(int absX)
+	int absPosX, absPosY, camSizeX, camSizeY, onCamX, onCamY;
+	public posCalc(int camX, int camY, int csX, int csY)
 	{
-		return 0;
+		onCamX=camX;
+		onCamY=camY;
+		camSizeX=csX;
+		camSizeY=csY;
 	}
-	int camX(int absY)
+	int camY(int absY)
 	{
-		return 0;
+		return onCamY-(absPosY-absY);
+	}
+	int camX(int absX)
+	{
+		return onCamX-(absPosX-absX);
+	}
+	void update(int pX, int pY)
+	{
+		absPosX=pX;
+		absPosY=pY;
 	}
 }
 class oBase
@@ -32,7 +40,6 @@ class oBase
 
 	Boolean in_air = false;
 	Boolean gravity = false;
-	int jumpstr = 80;
 
 	Boolean tiled = false;
 	int depth = 0;
@@ -56,30 +63,19 @@ class oBase
 	{
 		posx+=hspeed;
 		posy+=vspeed;
-		if(gravity == true && posy < buffy-jumpstr && vspeed < 0)
-			vspeed *=-1;
-		if(posy>500)
-		{
-			vspeed=0;
-			in_air=false;
-		}
 	}
 }
 class oList
 {
+	posCalc pC;
 	Toolkit toolkit = Toolkit.getDefaultToolkit();
-
 	ArrayList<Image> images = new ArrayList<Image>();
 	ArrayList<oBase> objects = new ArrayList<oBase>();
 	int camera;
-	int maxX, maxY, cX, cY;
 	public oList(int cam, int screenSizeX, int screenSizeY, int cameraX, int cameraY)
 	{
+		pC=new posCalc(cameraX,cameraY,screenSizeX,screenSizeY);
 		camera = cam;
-		maxX = screenSizeX;
-		maxY = screenSizeY;
-		cX = cameraX;
-		cY = cameraY;
 	}
 	void addImage(String img)
 	{
@@ -142,6 +138,7 @@ class oList
 	}
 	void draw(Graphics g, game z)
 	{
+		pC.update(objects.get(camera).posx,objects.get(camera).posy);
 		for(int x = 0; x<objects.size();x++)
 		{
 			objects.get(x).move();
@@ -154,7 +151,7 @@ class oList
 			}
 			else
 			{
-				g.drawImage(objects.get(x).img,	cX-(objects.get(camera).posx-objects.get(x).posx),	cY-(objects.get(camera).posy-objects.get(x).posy),z);
+				g.drawImage(objects.get(x).img,	pC.camX(objects.get(x).posx),	pC.camY(objects.get(x).posy),z);
 			}
 		}
 	}
@@ -164,7 +161,7 @@ class game extends Panel implements KeyListener
 	oList objectlist = new oList(1,700,350,300,180);
 	public static void main(String[] args) throws IOException
 	{
-		//Scanner inFile = new Scanner(new File("myFile"));
+
 		Frame f = new Frame();
 		f.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -173,40 +170,43 @@ class game extends Panel implements KeyListener
 				System.exit(0);
 			};
 		});
-
-		game ut = new game();
-		ut.setFocusable(true);
-		ut.setSize(700,350); // same size as defined in the HTML APPLET
-		f.add(ut);
+		game x = new game();
+		x.setFocusable(true);
+		x.setSize(700,350); // same size as defined in the HTML APPLET
+		f.add(x);
 		f.pack();
-		ut.init();
+		x.init();
 		f.setSize(700,350+20); // add 20, seems enough for the Frame title,
 		while(true)
 		{
-			ut.repaint();
+			x.repaint();
 			f.show();
 			try{
 				Thread.sleep(20);
 			}
 			catch(InterruptedException ex){}
-
 		}
-
 	}
  	AudioClip soundFile1;
-	public void init()
+	public void init() throws IOException
 	{
 		addKeyListener(this);
-		objectlist.addImage("game/res/tiles/01.jpg");
-		objectlist.addImage("game/res/snoopy.gif");
-		objectlist.addImage("game/res/barrel.gif");
+		Scanner resFile = new Scanner(new File("game/res.dat"));
+		while(resFile.hasNextLine())    //load the images in from file
+			objectlist.addImage(resFile.nextLine());
+
+		Scanner oF = new Scanner(new File("game/objects.dat"));
 /*
 		soundFile1 = getAudioClip(getDocumentBase(),"game/music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();*/
 
-		objectlist.add(0,0,0,1,this);
-		objectlist.add(2,500,500,0,this);
+		while(oF.hasNextLine())    //load the objects in from file
+		{
+			objectlist.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt(), this);
+		}
+		//objectlist.add(0,0,0,1,this);
+		//objectlist.add(2,500,500,0,this);
 		objectlist.sethSpeed(1,10);
 		//objectlist.add(1,500,500,0,this);
 		objectlist.setTiled(0);
@@ -227,27 +227,17 @@ class game extends Panel implements KeyListener
 		{
 			case KeyEvent.VK_DOWN:
 				objectlist.setvSpeed(objectlist.camera,10);
-
 				break;
 			case KeyEvent.VK_RIGHT:
-				//objects.get(camera).hspeed=10;
 				objectlist.sethSpeed(objectlist.camera,10);
 				break;
 			case KeyEvent.VK_LEFT:
 				objectlist.sethSpeed(objectlist.camera,-10);
-				//objects.get(camera).hspeed=-6;
 				break;
 			case KeyEvent.VK_UP:
 				objectlist.setvSpeed(objectlist.camera,-10);
-				/*if(objects.get(camera).in_air==false)
-				{
-					objects.get(camera).buffy=objects.get(camera).posy;
-					objects.get(camera).vspeed=-20;
-					objects.get(camera).in_air = true;
-				}*/
 				break;
 		}
-
 	}
 	public void keyTyped(KeyEvent ke) {}
 	public void keyReleased(KeyEvent ke)
@@ -269,7 +259,6 @@ class game extends Panel implements KeyListener
 				objectlist.setvSpeed(objectlist.camera,0);
 				break;
 		}
-
 	}
 	public boolean mouseDrag(Event e, int x, int y)
 	{
