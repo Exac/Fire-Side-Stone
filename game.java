@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 class posCalc
 {
-	int absPosX, absPosY, camSizeX, camSizeY, onCamX, onCamY;
+	int camAbsX, camAbsY, camSizeX, camSizeY, onCamX, onCamY;
 	public posCalc(int camX, int camY, int csX, int csY)
 	{
 		onCamX=camX;
@@ -16,16 +16,16 @@ class posCalc
 	}
 	int camY(int absY)
 	{
-		return onCamY-(absPosY-absY);
+		return onCamY-(camAbsY-absY);
 	}
 	int camX(int absX)
 	{
-		return onCamX-(absPosX-absX);
+		return onCamX-(camAbsX-absX);
 	}
 	void update(int pX, int pY)
 	{
-		absPosX=pX;
-		absPosY=pY;
+		camAbsX=pX;
+		camAbsY=pY;
 	}
 }
 class oBase
@@ -44,7 +44,7 @@ class oBase
 	Boolean tiled = false;
 	int depth = 0;
 	Rectangle mask;
-	public oBase(Image a, int x, int y,int d, game z)//without mask
+	public oBase(Image a, int x, int y,int d)//without mask
 	{
 		posx=x;
 		posy=y;
@@ -58,6 +58,7 @@ class oBase
 		posy=y;
 		depth = d;
 		img = a;
+		//mask = new Rectangle(pC.camX(x),pC.camY(y),maskX,maskY);
 	}
 	void move()
 	{
@@ -81,13 +82,9 @@ class oList
 	{
 		images.add(toolkit.getImage(img));
 	}
-	void add(oBase x)
+	void add(int ImageIndex, int x, int y, int depth)
 	{
-		objects.add(x);
-	}
-	void add(int ImageIndex, int x, int y, int depth, game z)
-	{
-		objects.add(new oBase(images.get(ImageIndex),x,y,depth, z));
+		objects.add(new oBase(images.get(ImageIndex),x,y,depth));
 	}
 	private void swap(int x, int y)
 	{
@@ -158,6 +155,7 @@ class oList
 }
 class game extends Panel implements KeyListener
 {
+	AudioClip soundFile1;
 	oList objectlist = new oList(1,700,350,300,180);
 	public static void main(String[] args) throws IOException
 	{
@@ -187,30 +185,28 @@ class game extends Panel implements KeyListener
 			catch(InterruptedException ex){}
 		}
 	}
- 	AudioClip soundFile1;
 	public void init() throws IOException
 	{
-		addKeyListener(this);
-		Scanner resFile = new Scanner(new File("game/res.dat"));
-		while(resFile.hasNextLine())    //load the images in from file
-			objectlist.addImage(resFile.nextLine());
-
-		Scanner oF = new Scanner(new File("game/objects.dat"));
-/*
+		/*
 		soundFile1 = getAudioClip(getDocumentBase(),"game/music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();*/
-
-		while(oF.hasNextLine())    //load the objects in from file
+		addKeyListener(this);
+		//load images
+		Scanner resFile = new Scanner(new File("game/res.dat"));
+		while(resFile.hasNextLine())
 		{
-			objectlist.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt(), this);
+			objectlist.addImage(resFile.nextLine());
 		}
-		//objectlist.add(0,0,0,1,this);
-		//objectlist.add(2,500,500,0,this);
+		//load objects
+		Scanner oF = new Scanner(new File("game/objects.dat"));
+		while(oF.hasNextLine())
+		{
+			objectlist.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt());
+		}
+		//extra initializations
 		objectlist.sethSpeed(1,10);
-		//objectlist.add(1,500,500,0,this);
 		objectlist.setTiled(0);
-		//objectlist.get(2).gravity=true;
 	}
 	public void paint(Graphics g)
 	{
@@ -249,11 +245,9 @@ class game extends Panel implements KeyListener
 				break;
 			case KeyEvent.VK_RIGHT:
 				objectlist.sethSpeed(objectlist.camera,0);
-				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_LEFT:
 				objectlist.sethSpeed(objectlist.camera,0);
-				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_UP:
 				objectlist.setvSpeed(objectlist.camera,0);
