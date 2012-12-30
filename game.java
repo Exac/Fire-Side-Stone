@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 class posCalc
 {
-	int camAbsX, camAbsY, camSizeX, camSizeY, onCamX, onCamY;
+	int absPosX, absPosY, camSizeX, camSizeY, onCamX, onCamY;
 	public posCalc(int camX, int camY, int csX, int csY)
 	{
 		onCamX=camX;
@@ -16,16 +16,16 @@ class posCalc
 	}
 	int camY(int absY)
 	{
-		return onCamY-(camAbsY-absY);
+		return onCamY-(absPosY-absY);
 	}
 	int camX(int absX)
 	{
-		return onCamX-(camAbsX-absX);
+		return onCamX-(absPosX-absX);
 	}
 	void update(int pX, int pY)
 	{
-		camAbsX=pX;
-		camAbsY=pY;
+		absPosX=pX;
+		absPosY=pY;
 	}
 }
 class oBase
@@ -44,7 +44,7 @@ class oBase
 	Boolean tiled = false;
 	int depth = 0;
 	Rectangle mask;
-	public oBase(Image a, int x, int y,int d)//without mask
+	public oBase(Image a, int x, int y,int d, game z)//without mask
 	{
 		posx=x;
 		posy=y;
@@ -58,7 +58,6 @@ class oBase
 		posy=y;
 		depth = d;
 		img = a;
-		//mask = new Rectangle(pC.camX(x),pC.camY(y),maskX,maskY);
 	}
 	void move()
 	{
@@ -98,9 +97,13 @@ class oList
 	{
 		images.add(toolkit.getImage(img));
 	}
-	void add(int ImageIndex, int x, int y, int depth)
+	void add(oBase x)
 	{
-		objects.add(new oBase(images.get(ImageIndex),x,y,depth));
+		objects.add(x);
+	}
+	void add(int ImageIndex, int x, int y, int depth, game z)
+	{
+		objects.add(new oBase(images.get(ImageIndex),x,y,depth, z));
 	}
 	private void swap(int x, int y)
 	{
@@ -173,7 +176,6 @@ class oList
 }
 class game extends Panel implements KeyListener
 {
-	AudioClip soundFile1;
 	oList objectlist = new oList(1,700,350,300,180);
 	public static void main(String[] args) throws IOException
 	{
@@ -203,10 +205,9 @@ class game extends Panel implements KeyListener
 			catch(InterruptedException ex){}
 		}
 	}
+ 	AudioClip soundFile1;
 	public void init() throws IOException
 	{
-		/*
-		soundFile1 = getAudioClip(getDocumentBase(),"game/music/01.wav");
 		addKeyListener(this);
 		soundFile1.play();*/
 		addKeyListener(this);
@@ -215,7 +216,9 @@ class game extends Panel implements KeyListener
 		objectlist.loadObjects("game/objects.dat");
 		//extra initializations
 		objectlist.sethSpeed(1,10);
+		//objectlist.add(1,500,500,0,this);
 		objectlist.setTiled(0);
+		//objectlist.get(2).gravity=true;
 	}
 	public void paint(Graphics g)
 	{
@@ -254,9 +257,11 @@ class game extends Panel implements KeyListener
 				break;
 			case KeyEvent.VK_RIGHT:
 				objectlist.sethSpeed(objectlist.camera,0);
+				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_LEFT:
 				objectlist.sethSpeed(objectlist.camera,0);
+				//objects.get(camera).hspeed=0;
 				break;
 			case KeyEvent.VK_UP:
 				objectlist.setvSpeed(objectlist.camera,0);
