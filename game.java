@@ -44,7 +44,7 @@ class oBase
 	Boolean tiled = false;
 	int depth = 0;
 	Rectangle mask;
-	public oBase(Image a, int x, int y,int d, game z)//without mask
+	public oBase(Image a, int x, int y,int d )//without mask
 	{
 		posx=x;
 		posy=y;
@@ -52,7 +52,7 @@ class oBase
 		img = a;
 		mask = new Rectangle(0,0,0,0);
 	}
-	public oBase(Image a, int x, int y,int d, game z, int maskX, int maskY)//with mask
+	public oBase(Image a, int x, int y,int d, int maskX, int maskY)//with mask
 	{
 		posx=x;
 		posy=y;
@@ -82,7 +82,7 @@ class oList
 		Scanner oF = new Scanner(new File(filename));
 		while(oF.hasNextLine())
 		{
-			//this.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt());
+			this.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt());
 		}
 	}
 	void loadImages(String filename) throws IOException
@@ -101,9 +101,9 @@ class oList
 	{
 		objects.add(x);
 	}
-	void add(int ImageIndex, int x, int y, int depth, game z)
+	void add(int ImageIndex, int x, int y, int depth)
 	{
-		objects.add(new oBase(images.get(ImageIndex),x,y,depth, z));
+		objects.add(new oBase(images.get(ImageIndex),x,y,depth));
 	}
 	private void swap(int x, int y)
 	{
@@ -208,9 +208,11 @@ class game extends Panel implements KeyListener
  	AudioClip soundFile1;
 	public void init() throws IOException
 	{
+
 		addKeyListener(this);
-		soundFile1.play();*/
-		addKeyListener(this);
+		/*soundFile1.play();
+		addKeyListener(this);*/
+
 		//load images
 		objectlist.loadImages("game/res.dat");
 		objectlist.loadObjects("game/objects.dat");
