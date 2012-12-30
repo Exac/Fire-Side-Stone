@@ -78,6 +78,22 @@ class oList
 		pC=new posCalc(cameraX,cameraY,screenSizeX,screenSizeY);
 		camera = cam;
 	}
+	void loadObjects(String filename) throws IOException
+	{
+		Scanner oF = new Scanner(new File(filename));
+		while(oF.hasNextLine())
+		{
+			//this.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt());
+		}
+	}
+	void loadImages(String filename) throws IOException
+	{
+		Scanner resFile = new Scanner(new File(filename));
+		while(resFile.hasNextLine())
+		{
+			this.addImage(resFile.nextLine());
+		}
+	}
 	void addImage(String img)
 	{
 		images.add(toolkit.getImage(img));
@@ -135,7 +151,8 @@ class oList
 	}
 	void draw(Graphics g, game z)
 	{
-		pC.update(objects.get(camera).posx,objects.get(camera).posy);
+		if(camera < objects.size()) //if camera references an object that exists
+			pC.update(objects.get(camera).posx,objects.get(camera).posy);
 		for(int x = 0; x<objects.size();x++)
 		{
 			objects.get(x).move();
@@ -148,6 +165,7 @@ class oList
 			}
 			else
 			{
+
 				g.drawImage(objects.get(x).img,	pC.camX(objects.get(x).posx),	pC.camY(objects.get(x).posy),z);
 			}
 		}
@@ -193,17 +211,8 @@ class game extends Panel implements KeyListener
 		soundFile1.play();*/
 		addKeyListener(this);
 		//load images
-		Scanner resFile = new Scanner(new File("game/res.dat"));
-		while(resFile.hasNextLine())
-		{
-			objectlist.addImage(resFile.nextLine());
-		}
-		//load objects
-		Scanner oF = new Scanner(new File("game/objects.dat"));
-		while(oF.hasNextLine())
-		{
-			objectlist.add(oF.nextInt(),oF.nextInt(),oF.nextInt(),oF.nextInt());
-		}
+		objectlist.loadImages("game/res.dat");
+		objectlist.loadObjects("game/objects.dat");
 		//extra initializations
 		objectlist.sethSpeed(1,10);
 		objectlist.setTiled(0);
