@@ -17,8 +17,9 @@ public class Viewer
 	/**
      * Console log.
      *
-     * @author		Exac
-     * @since		1.0
+     * @param string_	The string to be output to the console.
+     * @author			Exac
+     * @since			1.0
      */
 	public static void out(String string_)
 	{
