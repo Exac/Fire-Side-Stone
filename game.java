@@ -179,7 +179,9 @@ class game extends Panel implements KeyListener
 	oList objectlist = new oList(1,700,350,300,180);
 	public static void main(String[] args) throws IOException
 	{
-
+		Model m = new Model();
+		System.exit(0);
+		
 		Frame f = new Frame();
 		f.addWindowListener(new java.awt.event.WindowAdapter()
 		{
