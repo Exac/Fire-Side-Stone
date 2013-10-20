@@ -1,10 +1,8 @@
 /**
  * The Viewer from the MVC pattern, this should be instantiated 
  * inside Model, and should only do graphics, not computation.
- * <p>
- * Viewer UPDATES the screen.
  * <p>All the graphical output should be routed through this 
- * class.
+ * class. It is UPDATED by the Model.
  * 
  * @author      Exac
  * @version		%I%, %G%
